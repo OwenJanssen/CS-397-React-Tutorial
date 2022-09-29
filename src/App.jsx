@@ -1,5 +1,7 @@
 import Banner from "./components/Banner.jsx";
 import CourseList from "./components/CourseList.jsx";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'
 
 const schedule = {
   "title": "CS Courses for 2018-2019",
@@ -32,7 +34,7 @@ const schedule = {
 };
 
 const App = () => (
-  <div>
+  <div className="container">
     <Banner text={schedule.title}/>
     <CourseList courses={schedule.courses}/>
   </div>

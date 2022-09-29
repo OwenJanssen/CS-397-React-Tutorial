@@ -40,3 +40,18 @@
 button {
   font-size: calc(10px + 2vmin);
 }
+
+.course-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 12.5rem);
+}
+
+.seperator {
+  display: inline-block;
+  height: 1px;
+  width: 120%;
+  margin-left: -10%;
+  margin-bottom: 8%;
+  margin-top: 15%;
+  background: lightgrey;
+}
