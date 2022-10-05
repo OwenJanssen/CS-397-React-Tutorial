@@ -1,27 +1,11 @@
-import { useState } from "react";
+import useState from 'react';
 
-const CourseList = ({courses}) => {
-    const [selectedList, setSelectedList] = useState([]);
-
-    const updateSelectedList = (courseNumber) => {
-        if (selectedList.includes(courseNumber)) {
-            setSelectedList(lst => lst.push(courseNumber));
-        }
-        else {
-            setSelectedList(lst => lst.filter(cn => cn != courseNumber));
-        }
-    }
-    
+const CourseList = ({courses, selectedList, updateSelectedList}) => {
     return <div className="course-list">
-        { courses.map(([_, course]) => {
-            const [backgroundColor, setBackgroundColor] = useState('white');
-
-            const updateSelected = () => {
-                setBackgroundColor(backgroundColor === 'white' ? 'deepskyblue' : 'white');
-                updateSelectedList(course.number);
-            };
-
-            return <div className="card m-1 p-2" style={{width: '12rem', backgroundColor: backgroundColor}} key={course.number} onClick={updateSelected}>
+        {courses.map(([_, course]) => (
+            <div className="card m-1 p-2" style={{width: '12rem', backgroundColor: (selectedList.includes(course) 
+                                                                                                    ? 'deepskyblue' : 'white')}} 
+                                            key={course.number} onClick={() => updateSelectedList(course)}>
                 <div className="card-body" style={{display: 'flex', flexFlow: 'column'}}>
                     <h5 className="card-title">
                         {`${course.term} CS ${course.number}`}
@@ -34,9 +18,7 @@ const CourseList = ({courses}) => {
                         {course.meets}
                     </div>
                 </div>
-            </div>;
-        })}
-    </div>
-};
+            </div>))}
+        </div>;}
 
 export default CourseList;

@@ -18,7 +18,7 @@ const QuarterButton = ({quarter, selection, setSelection}) => (
     <input type="radio" id={quarter} className="btn-check" checked={quarter === selection} autoComplete="off"
       onChange={() => setSelection(quarter)} />
     <label className="btn btn-success mb-1 p-2" htmlFor={quarter} style={{margin: 4, width: 75}}>
-    { quarter }
+      { quarter }
     </label>
   </div>
 );
@@ -32,18 +32,23 @@ const QuarterSelector = ({selection, setSelection}) => (
 );
 
 const Main = () => {
-  const [selection, setSelection] = useState(() => Object.keys(quarters)[0]);
+  const [quarterSelection, setQuarterSelection] = useState(() => Object.keys(quarters)[0]);
+  const [selectedCoursesList, setSelectedCoursesList] = useState([]);
   const [schedule, isLoading, error] = useJsonQuery('https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php');
 
   if (error) return <h1>Error loading schedule data: {`${error}`}</h1>;
   if (isLoading) return <h1>Loading schedule data...</h1>;
   if (!schedule) return <h1>No schedule data found</h1>;
 
+  const updateSelectedList = (course) => setSelectedCoursesList(
+    selectedCoursesList.includes(course) ? selectedCoursesList.filter(c => c !== course) : [...selectedCoursesList, course]);
+
   return <div className="container">
-      <Banner text={schedule.title}/>
-      <QuarterSelector selection={selection} setSelection={setSelection}/>
-      <CourseList courses={Object.entries(schedule.courses).filter(([_, c]) => c.term===selection)}/>
-    </div>;
+    <Banner text={schedule.title}/>
+    <QuarterSelector selection={quarterSelection} setSelection={setQuarterSelection}/>
+    <CourseList courses={Object.entries(schedule.courses).filter(([_, c]) => c.term===quarterSelection)} 
+                selectedList={selectedCoursesList} updateSelectedList={updateSelectedList}/>
+  </div>;
 };
 
 const App = () => (
