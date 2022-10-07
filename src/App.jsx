@@ -5,6 +5,9 @@ import './App.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useJsonQuery } from './utilities/fetch';
 import { useState } from "react";
+import Modal from './components/Modal';
+import { Button } from "bootstrap";
+import SchedulePopup from "./components/SchedulePopup.jsx";
 
 const quarters = {
   Fall: 'Fall',
@@ -34,18 +37,29 @@ const QuarterSelector = ({selection, setSelection}) => (
 const Main = () => {
   const [quarterSelection, setQuarterSelection] = useState(() => Object.keys(quarters)[0]);
   const [selectedCoursesList, setSelectedCoursesList] = useState([]);
+  const [showSchedulePopup, setShowSchedulePopup] = useState(false);
   const [schedule, isLoading, error] = useJsonQuery('https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php');
 
   if (error) return <h1>Error loading schedule data: {`${error}`}</h1>;
   if (isLoading) return <h1>Loading schedule data...</h1>;
   if (!schedule) return <h1>No schedule data found</h1>;
-
+  
+  const openSchedulePopup = () => setShowSchedulePopup(true);
+  const closeSchedulePopup = () => setShowSchedulePopup(false);
   const updateSelectedList = (course) => setSelectedCoursesList(
     selectedCoursesList.includes(course) ? selectedCoursesList.filter(c => c !== course) : [...selectedCoursesList, course]);
 
   return <div className="container">
     <Banner text={schedule.title}/>
-    <QuarterSelector selection={quarterSelection} setSelection={setQuarterSelection}/>
+    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+      <QuarterSelector selection={quarterSelection} setSelection={setQuarterSelection}/>
+      <button className="btn btn-outline-dark" onClick={openSchedulePopup} style={{marginBottom: '4px'}}>
+        Show Schedule
+      </button>
+    </div>
+    <Modal open={showSchedulePopup} close={closeSchedulePopup}>
+      <SchedulePopup selectedList={selectedCoursesList}/>
+    </Modal>
     <CourseList courses={Object.entries(schedule.courses).filter(([_, c]) => c.term===quarterSelection)} 
                 selectedList={selectedCoursesList} updateSelectedList={updateSelectedList}/>
   </div>;
