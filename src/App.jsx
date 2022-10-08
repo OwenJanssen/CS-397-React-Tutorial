@@ -47,7 +47,38 @@ const Main = () => {
   const openSchedulePopup = () => setShowSchedulePopup(true);
   const closeSchedulePopup = () => setShowSchedulePopup(false);
   const updateSelectedList = (course) => setSelectedCoursesList(
-    selectedCoursesList.includes(course) ? selectedCoursesList.filter(c => c !== course) : [...selectedCoursesList, course]);
+    (selectedCoursesList.includes(course) ? 
+      selectedCoursesList.filter(c => c !== course) : conflictsWithSelected(course) ? 
+        selectedCoursesList : [...selectedCoursesList, course]));
+  
+  const isThereTimeConflict = (a, b) => {
+    if (a === b) { return false; }
+    if (a.term !== b.term) { return false; }
+
+    const aMeets = a.meets;
+    const bMeets = b.meets;
+
+    const aDaysOfTheWeek = aMeets.split(' ')[0].split(/(?=[A-Z])/);
+    const bDaysOfTheWeek = bMeets.split(' ')[0].split(/(?=[A-Z])/);
+
+    if (aDaysOfTheWeek.filter(x => bDaysOfTheWeek.indexOf(x) !== -1).length === 0) { return false; }
+
+    const aTimes = aMeets.split(' ')[1].split('-').map(time => time.split(':'));
+    const aStart = parseInt(aTimes[0][0]) + parseInt(aTimes[0][1])/60;
+    const aEnd = parseInt(aTimes[1][0]) + parseInt(aTimes[1][1])/60;
+
+    const bTimes = bMeets.split(' ')[1].split('-').map(time => time.split(':'));
+    const bStart = parseInt(bTimes[0][0]) + parseInt(bTimes[0][1])/60;
+    const bEnd = parseInt(bTimes[1][0]) + parseInt(bTimes[1][1])/60;
+
+    if (aEnd < bStart || bEnd < aStart) { return false; }
+
+    return true;
+  }
+
+  const conflictsWithSelected = (course) => {
+    return selectedCoursesList.filter(selectedCourse => isThereTimeConflict(course, selectedCourse)).length > 0;
+  }
 
   return <div className="container">
     <Banner text={schedule.title}/>
@@ -61,7 +92,7 @@ const Main = () => {
       <SchedulePopup selectedList={selectedCoursesList}/>
     </Modal>
     <CourseList courses={Object.entries(schedule.courses).filter(([_, c]) => c.term===quarterSelection)} 
-                selectedList={selectedCoursesList} updateSelectedList={updateSelectedList}/>
+                selectedList={selectedCoursesList} updateSelectedList={updateSelectedList} conflictsWithSelected={conflictsWithSelected}/>
   </div>;
 };
 
