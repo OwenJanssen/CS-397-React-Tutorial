@@ -8,6 +8,8 @@ import { useState } from "react";
 import Modal from './components/Modal';
 import { Button } from "bootstrap";
 import SchedulePopup from "./components/SchedulePopup.jsx";
+import AddCourse from "./components/AddCourse.jsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const quarters = {
   Fall: 'Fall',
@@ -99,7 +101,17 @@ const Main = () => {
 const App = () => (
   <div className="container">
     <QueryClientProvider client={queryClient}>
-      <Main/>
+    <BrowserRouter>
+        <Routes>
+          <Route path="/" element={
+            <Main/>
+          }/>
+
+          <Route path="/addCourse" element={
+            <AddCourse />
+          } />
+        </Routes>
+      </BrowserRouter>
     </QueryClientProvider>
   </div>
 );

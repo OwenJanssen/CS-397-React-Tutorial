@@ -1,6 +1,12 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 const CourseList = ({courses, selectedList, updateSelectedList, conflictsWithSelected}) => {
     return <div className="course-list">
         {courses.map(([_, course]) => {
+            const addCourse = (event) => {
+                window.location.href = "/addCourse";
+            }
+        
             const bg = selectedList.includes(course) ? 'deepskyblue' : conflictsWithSelected(course) ? 'indianred' : 'white';
             
             return <div className="card m-1 p-2" style={{width: '12rem', backgroundColor: bg}} 
@@ -16,6 +22,7 @@ const CourseList = ({courses, selectedList, updateSelectedList, conflictsWithSel
                     <div className="card-text">
                         {course.meets}
                     </div>
+                    <button className="btn btn-success" onClick={addCourse} style={{marginTop: "10px", alignSelf: "center", width: "fit-content"}}>Edit</button>
                 </div>
             </div>})}
         </div>;};
