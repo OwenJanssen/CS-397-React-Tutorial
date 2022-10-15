@@ -11,6 +11,7 @@
   "dependencies": {
     "@tanstack/react-query": "^4.7.2",
     "bootstrap": "^5.2.1",
+    "firebase": "^9.12.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.2"
