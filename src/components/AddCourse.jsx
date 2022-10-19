@@ -1,6 +1,8 @@
 import {useState} from 'react';
+import { useDbUpdate } from "../utilities/firebase";
 
-const AddCourse = () => {
+const AddCourse = (props) => {
+    const [update, result] = useDbUpdate("//courses/"+props.id);
     const [title, setTitle] = useState("");
     const [meetingTime, setMeetingTime] = useState("");
 
@@ -25,10 +27,25 @@ const AddCourse = () => {
         return meetingTime.length > 0 && !re.test(meetingTime);
     }
 
+    const canSubmit = () => {
+        return !titleInvalid() && !meetingTimeInvalid();
+    }
+
+    const submit = (evt) => {
+        evt.preventDefault();
+        if (canSubmit()) {
+            update({
+                "meets": meetingTime,
+                "title": title
+            });
+            goBack();
+        }
+    };
+
     return <div className="container">
         <h1 style={{marginTop: "10px"}}>Edit Course</h1>
 
-        <form>
+        <form onSubmit={submit}>
             <div>
                 <label style={{marginBottom: "20px", marginRight: "5px"}}>Title:</label>
                 <input type="text" value={title} onChange={updateTitle}/>
@@ -40,6 +57,8 @@ const AddCourse = () => {
                 <input type="text" value={meetingTime} onChange={updateMeetingTime}/>
                 {meetingTimeInvalid() && <div style={{marginBottom: "20px", background: 'red', width: 'fit-content', whiteSpace: 'pre'}}> Meeting time must contain days and start-end, e.g., MWF 12:00-13:20 </div>}
             </div>
+
+            <button className={canSubmit() ? "btn btn-success" : "btn btn-danger"} style={{marginBottom: "10px"}}>SUBMIT</button>
         </form>
 
         <button className="btn btn-danger" onClick={goBack}>CANCEL</button>

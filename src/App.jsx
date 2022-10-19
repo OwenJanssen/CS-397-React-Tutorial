@@ -9,7 +9,7 @@ import Modal from './components/Modal';
 import { Button } from "bootstrap";
 import SchedulePopup from "./components/SchedulePopup.jsx";
 import AddCourse from "./components/AddCourse.jsx";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import { useDbData } from "./utilities/firebase.js";
 
 const quarters = {
@@ -36,6 +36,12 @@ const QuarterSelector = ({selection, setSelection}) => (
     }
   </div>
 );
+
+const AddCourseUrl = ({data}) => {
+  const { id } = useParams();
+
+  return <AddCourse id={id} data={data} />;
+};
 
 const Main = () => {
   const [quarterSelection, setQuarterSelection] = useState(() => Object.keys(quarters)[0]);
@@ -99,22 +105,22 @@ const Main = () => {
   </div>;
 };
 
-const App = () => (
-  <div className="container">
+const App = () => {
+  return <div className="container">
     <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={
             <Main/>
           }/>
 
-          <Route path="/addCourse" element={
-            <AddCourse />
+          <Route path="/addCourse/:id" element={
+            <AddCourseUrl/>
           } />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
   </div>
-);
+};
 
 export default App;

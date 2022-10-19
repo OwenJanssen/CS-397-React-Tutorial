@@ -4,7 +4,7 @@ const CourseList = ({courses, selectedList, updateSelectedList, conflictsWithSel
     return <div className="course-list">
         {courses.map(([_, course]) => {
             const addCourse = (event) => {
-                window.location.href = "/addCourse";
+                window.location.href = "/addCourse/"+course.term[0]+course.number;
             }
         
             const bg = selectedList.includes(course) ? 'deepskyblue' : conflictsWithSelected(course) ? 'indianred' : 'white';
