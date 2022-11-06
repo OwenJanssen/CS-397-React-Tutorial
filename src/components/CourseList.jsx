@@ -9,7 +9,7 @@ const CourseList = ({courses, selectedList, updateSelectedList, conflictsWithSel
         
             const bg = selectedList.includes(course) ? 'deepskyblue' : conflictsWithSelected(course) ? 'indianred' : 'white';
             
-            return <div className="card m-1 p-2" style={{width: '12rem', backgroundColor: bg}} 
+            return <div className="card m-1 p-2" style={{width: '12rem', backgroundColor: bg}} data-cy="course"
                                             key={course.number} onClick={() => updateSelectedList(course)}>
                 <div className="card-body" style={{display: 'flex', flexFlow: 'column'}}>
                     <h5 className="card-title">
