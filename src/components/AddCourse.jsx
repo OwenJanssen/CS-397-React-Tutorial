@@ -2,7 +2,7 @@ import {useState} from 'react';
 import { useDbUpdate } from "../utilities/firebase";
 
 const AddCourse = (props) => {
-    const [update, result] = useDbUpdate("//courses/"+props.id);
+    const [update, result] = useDbUpdate("/courses/"+props.id);
     const [title, setTitle] = useState("");
     const [meetingTime, setMeetingTime] = useState("");
 
@@ -35,8 +35,10 @@ const AddCourse = (props) => {
         evt.preventDefault();
         if (canSubmit()) {
             update({
+                [props.id]: {
                 "meets": meetingTime,
                 "title": title
+                }
             });
             goBack();
         }

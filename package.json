@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "cy:open": "cypress open --e2e"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.7.2",
